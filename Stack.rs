@@ -1,3 +1,7 @@
+use std::env;
+use std::fs;
+use std::io::stdin;
+
 type Link = Option<Box<Node>>;
 
 #[derive(Debug)]
@@ -21,6 +25,16 @@ struct Stack {
 #[allow(dead_code)]
 impl Stack {
     fn new() -> Self {
+        Stack { head: None }
+    }
+
+    fn new_fs(path: &String) -> Self {
+        println!("Path: {:?}", path);
+
+        let contents = fs::read_to_string(path).expect("Error.");
+
+        println!("{:#?}", contents);
+
         Stack { head: None }
     }
 }
@@ -66,9 +80,34 @@ impl Stack {
 
         vector
     }
+
+   fn reverse(&mut self) {
+      let mut vector: Vec<i32> = Vec::new();
+    
+      while let Some(node_value) = self.pop() {
+          vector.push(node_value);
+      }
+            
+      vector.reverse();
+            
+      while let Some(elem) = vector.pop() {
+          self.push(elem);
+      }
+    }
 }
 
 fn main() {
-    let mut input = String::new();
+    let mut input = String::from("stack.txt");
     let mut st = Stack::new();
+    
+    st.push(1);
+    st.push(2);
+    st.push(3);
+    println!("{:#?}", &st);
+    println!("Stack to vector: {:?} ", st.to_vec());
+    
+    st.pop();
+    
+    println!("{:#?}", &st);
+    println!("Stack to vector: {:?} ", st.to_vec());
 }
