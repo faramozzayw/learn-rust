@@ -38,8 +38,9 @@ impl Stack {
 
     fn pop(&mut self) -> Option<i32> {
         self.head.take().map(|node| {
+            let value = node.value.clone();
             self.head = node.next;
-            node.value
+            value
         })
     }
 
