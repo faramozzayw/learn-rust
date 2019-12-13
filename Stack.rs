@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::io::stdin;
+use std::fmt;
 
 type Link = Option<Box<Node>>;
 
@@ -25,16 +26,6 @@ struct Stack {
 #[allow(dead_code)]
 impl Stack {
     fn new() -> Self {
-        Stack { head: None }
-    }
-
-    fn new_fs(path: &String) -> Self {
-        println!("Path: {:?}", path);
-
-        let contents = fs::read_to_string(path).expect("Error.");
-
-        println!("{:#?}", contents);
-
         Stack { head: None }
     }
 }
@@ -82,32 +73,40 @@ impl Stack {
     }
 
    fn reverse(&mut self) {
-      let mut vector: Vec<i32> = Vec::new();
-    
-      while let Some(node_value) = self.pop() {
-          vector.push(node_value);
-      }
-            
-      vector.reverse();
-            
-      while let Some(elem) = vector.pop() {
-          self.push(elem);
-      }
+        let mut vector: Vec<i32> = Vec::new();
+
+        while let Some(node_value) = self.pop() {
+            vector.push(node_value);
+        }
+        
+        vector.reverse();
+        
+        while let Some(elem) = vector.pop() {
+            self.push(elem);
+        }
     }
 }
 
+impl fmt::Display for Stack {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut fstr = String::default();
+        let mut current_node = &self.head;
+
+        while let Some(node) = &current_node {
+            fstr += "|\t";
+            fstr += &node.value.to_string();
+            fstr += "\t|\n";
+            current_node = &node.next;
+        }
+        
+        write!(f, "{}", fstr)
+    }
+}
 fn main() {
-    let mut input = String::from("stack.txt");
-    let mut st = Stack::new();
-    
-    st.push(1);
-    st.push(2);
-    st.push(3);
-    println!("{:#?}", &st);
-    println!("Stack to vector: {:?} ", st.to_vec());
-    
-    st.pop();
-    
-    println!("{:#?}", &st);
-    println!("Stack to vector: {:?} ", st.to_vec());
+   let mut st = Stack::new();
+   st.push(1);
+   st.push(2);
+   st.push(3);
+   st.push(4);
+   println!("Stack:\n{}", st);
 }
