@@ -91,7 +91,7 @@ impl fmt::Display for Stack {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut fstr = String::default();
         let mut current_node = &self.head;
-
+        
         while let Some(node) = &current_node {
             fstr += "|\t";
             fstr += &node.value.to_string();
@@ -102,6 +102,16 @@ impl fmt::Display for Stack {
         write!(f, "{}", fstr)
     }
 }
+
+impl Drop for Stack {
+    fn drop(&mut self) {
+        let mut current_link = self.head.take();
+        while let Some(mut node) = current_link {
+            current_link = node.next.take();
+        }
+    }
+}
+
 fn main() {
    let mut st = Stack::new();
    st.push(1);
