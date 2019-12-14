@@ -1,8 +1,8 @@
-use std::env;
-use std::fs;
-use std::io::stdin;
 use std::fmt;
-use std::mem;
+
+extern crate rand;
+
+use rand::Rng;
 
 type Link = Option<Box<Node>>;
 
@@ -24,7 +24,6 @@ struct Stack {
     head: Link,
 }
 
-#[allow(dead_code)]
 impl Stack {
     fn new() -> Self {
         Stack { head: None }
@@ -92,7 +91,7 @@ impl fmt::Display for Stack {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut fstr = String::default();
         let mut current_node = &self.head;
-        
+
         while let Some(node) = &current_node {
             fstr += "|\t";
             fstr += &node.value.to_string();
@@ -113,11 +112,39 @@ impl Drop for Stack {
     }
 }
 
+fn task(stack: &Stack) -> Stack {
+  let mut vect = stack.to_vec();
+  let len = vect.len() as i32;
+  let mut sum: i32 = 0;
+  
+  for item in &vect {
+    sum += item;
+  }
+  
+  let average = sum / len;
+  let mut new_stack = Stack::new();
+  
+  vect.reverse();
+  
+  for num in vect {
+    if num > average {
+      new_stack.push(num);
+    }
+  }
+  
+  new_stack
+}
+
 fn main() {
+   let mut rng = rand::thread_rng();
    let mut st = Stack::new();
-   st.push(1);
-   st.push(2);
-   st.push(3);
-   st.push(4);
+   
+   for n in 1 ..= 9 {
+     st.push(rng.gen_range(-50, 50));
+   }
+   
    println!("Stack:\n{}", st);
+   
+   let nst = task(&st);
+   println!("New Stack:\n{}", nst);
 }
