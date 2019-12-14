@@ -2,6 +2,7 @@ use std::env;
 use std::fs;
 use std::io::stdin;
 use std::fmt;
+use std::mem;
 
 type Link = Option<Box<Node>>;
 
