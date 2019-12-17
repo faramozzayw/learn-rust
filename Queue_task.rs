@@ -1,12 +1,17 @@
+extern crate rand;
+
 use std::collections::LinkedList;
+use rand::Rng;
 
 fn main() {
+    let mut rng = rand::thread_rng();
+
     let mut queue = LinkedList::new();
     let mut tmp = LinkedList::new();
     let mut result = LinkedList::new();
 
-    for num in 1..=15 {
-        queue.push_back(num);
+    for num in 1 ..= 15 {
+        queue.push_back(rng.gen_range(-50, 50));
     }
 
     println!("Queue:\n{:?}\n", queue);
