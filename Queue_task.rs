@@ -10,11 +10,11 @@ fn main() {
     let mut tmp = LinkedList::new();
     let mut result = LinkedList::new();
 
-    for num in 1 ..= 15 {
+    for _ in 1 ..= 15 {
         queue.push_back(rng.gen_range(-50, 50));
     }
 
-    println!("Queue:\n{:?}\n", queue);
+    println!("Queue: {:?}\n", queue);
 
     let first = queue.pop_front();
     let mut last = 0;
@@ -24,10 +24,10 @@ fn main() {
 
     while let Some(elem) = queue.pop_front() {
         match i {
-            _i if i < size => {
+            _ if i < size => {
                 tmp.push_back(elem);
             }
-            _i if i == size => {
+            _ if i == size => {
                 last = elem;
                 if let Some(x) = first {
                     tmp.push_back(x);
