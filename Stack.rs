@@ -1,4 +1,3 @@
-
 //extern crate rand;
 
 //use rand::Rng;
@@ -24,11 +23,12 @@ mod fz {
     #[derive(Debug)]
     pub struct Stack {
         head: Link,
+        len: usize
     }
 
     impl Stack {
         pub fn new() -> Self {
-            Stack { head: None }
+            Stack { head: None, len: 0 }
         }
     }
 
@@ -41,9 +41,11 @@ mod fz {
             });
 
             self.head = Some(new_node);
+            self.len += 1;
         }
 
         pub fn pop(&mut self) -> Option<i32> {
+            self.len -= 1;
             self.head.take().map(|node| {
                 let value = node.value.clone();
                 self.head = node.next;
@@ -63,7 +65,7 @@ mod fz {
         }
 
         pub fn to_vec(&self) -> Vec<i32> {
-            let mut vector: Vec<i32> = Vec::new();
+            let mut vector: Vec<i32> = Vec::with_capacity(self.len);
             let mut current_node = &self.head;
 
             while let Some(node) = &current_node {
@@ -75,7 +77,7 @@ mod fz {
         }
 
         pub fn reverse(&mut self) {
-            let mut vector: Vec<i32> = Vec::new();
+            let mut vector: Vec<i32> = Vec::with_capacity(self.len);
 
             while let Some(node_value) = self.pop() {
                 vector.push(node_value);
@@ -86,6 +88,10 @@ mod fz {
             while let Some(elem) = vector.pop() {
                 self.push(elem);
             }
+        }
+        
+        pub fn len(&self) -> usize {
+            self.len
         }
     }
 
