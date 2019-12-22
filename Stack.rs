@@ -1,3 +1,4 @@
+mod fz {
     use std::fmt;
 
     type Link = Option<Box<Node>>;
