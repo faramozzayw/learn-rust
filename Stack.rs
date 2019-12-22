@@ -26,6 +26,16 @@ mod fz {
         pub fn new() -> Self {
             Stack { head: None, len: 0 }
         }
+
+        pub fn from_vec(mut v: Vec<i32>) -> Self {
+            let mut s = Stack::new();
+
+            while let Some(elem) = v.pop() {
+                s.push(elem);
+            }
+
+            s
+        }
     }
 
     #[allow(dead_code)]
@@ -129,6 +139,9 @@ mod fz {
             }
         }
     }
+
+    #[cfg(test)]
+    mod test {}
 }
 
 use crate::fz::Stack;
@@ -157,4 +170,7 @@ fn main() {
     }
 
     println!("Stack:\n{}", st);
+
+    let vst = Stack::from_vec(vec![1, 2, 3]);
+    println!("vst:\n{}", vst);
 }
