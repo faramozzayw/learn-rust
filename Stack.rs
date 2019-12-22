@@ -1,8 +1,3 @@
-//extern crate rand;
-
-//use rand::Rng;
-
-mod fz {
     use std::fmt;
 
     type Link = Option<Box<Node>>;
@@ -23,7 +18,7 @@ mod fz {
     #[derive(Debug)]
     pub struct Stack {
         head: Link,
-        len: usize
+        len: usize,
     }
 
     impl Stack {
@@ -55,6 +50,10 @@ mod fz {
 
         pub fn peek(&self) -> Option<&i32> {
             self.head.as_ref().map(|node| &node.value)
+        }
+
+        pub fn peek_mut(&mut self) -> Option<&mut i32> {
+            self.head.as_mut().map(|node| &mut node.value)
         }
 
         pub fn empty(&self) -> bool {
@@ -89,9 +88,19 @@ mod fz {
                 self.push(elem);
             }
         }
-        
+
         pub fn len(&self) -> usize {
             self.len
+        }
+
+        pub fn clear(&mut self) {
+            let mut current_node = self.head.take();
+
+            while let Some(mut node) = current_node {
+                current_node = node.next.take();
+            }
+
+            self.len = 0;
         }
     }
 
@@ -124,11 +133,26 @@ mod fz {
 use crate::fz::Stack;
 
 fn main() {
-    //let mut rng = rand::thread_rng();
     let mut st = Stack::new();
 
     for n in 1..=9 {
         st.push(n);
+    }
+
+    println!("Stack:\n{}", st);
+    st.clear();
+    println!("Stack:\n{}", st);
+    println!("Empty? {}", st.empty());
+    println!("Length: {}", st.len());
+
+    for n in 1..=5 {
+        st.push(n);
+    }
+
+    println!("Stack:\n{}", st);
+    if let Some(x) = st.peek_mut() {
+        println!("{}", x);
+        *x = 666;
     }
 
     println!("Stack:\n{}", st);
