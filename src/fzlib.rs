@@ -51,7 +51,10 @@ pub mod Stack {
         }
 
         pub fn pop(&mut self) -> Option<i32> {
-            self.len -= 1;
+            if self.len != 0 {
+                self.len -= 1;
+            }
+
             self.head.take().map(|node| {
                 let value = node.value.clone();
                 self.head = node.next;
@@ -59,8 +62,8 @@ pub mod Stack {
             })
         }
 
-        pub fn peek(&self) -> Option<&i32> {
-            self.head.as_ref().map(|node| &node.value)
+        pub fn peek(&self) -> Option<i32> {
+            self.head.as_ref().map(|node| node.value)
         }
 
         pub fn peek_mut(&mut self) -> Option<&mut i32> {
@@ -141,5 +144,57 @@ pub mod Stack {
     }
 
     #[cfg(test)]
-    mod test {}
+    mod test {
+        use super::*;
+        
+        #[test]
+        fn it_basic_operation() {
+            let mut s = Stack::new();
+
+            s.push(1);
+            s.push(2);
+
+            assert_eq!(s.len(), 2);
+            assert_eq!(s.pop(), Some(2));
+
+            assert_eq!(s.len(), 1);
+
+            s.push(3);
+            s.push(4);
+            s.push(5);
+
+            assert_eq!(s.len(), 4);
+            assert_eq!(s.empty(), false);
+
+            assert_eq!(s.pop(), Some(5));
+            assert_eq!(s.len(), 3);
+
+            assert_eq!(s.pop(), Some(4));
+            assert_eq!(s.len(), 2);
+
+            assert_eq!(s.pop(), Some(3));
+            assert_eq!(s.len(), 1);
+
+            assert_eq!(s.pop(), Some(1));
+            assert_eq!(s.len(), 0);
+
+            assert_eq!(s.pop(), None);
+
+            assert_eq!(s.empty(), true);
+        }
+
+        #[test]
+        fn it_peek() {
+            let mut s = Stack::new();
+
+            for i in 1..=10 {
+                s.push(i);
+                assert_eq!(s.peek(), Some(i));
+            }
+
+            while let Some(_) = s.pop() {}
+
+            assert_eq!(s.peek(), None);
+        }
+    }
 }
