@@ -1,3 +1,5 @@
+// временная мера
+#[allow(non_snake_case)]
 pub mod Stack {
     use std::fmt;
 
@@ -192,9 +194,45 @@ pub mod Stack {
                 assert_eq!(s.peek(), Some(i));
             }
 
-            while let Some(_) = s.pop() {}
+            s.clear();
 
             assert_eq!(s.peek(), None);
+        }
+
+        #[test]
+        fn it_clear() {
+            for i in 1..=30 {
+                let mut s = Stack::new();
+
+                for j in 1..=i {
+                    s.push(i * j);
+                }
+
+                assert_eq!(s.empty(), false);
+                s.clear();
+                
+                assert_eq!(s.len(), 0);
+                assert_eq!(s.peek(), None);  
+                assert_eq!(s.empty(), true);
+            }
+        }
+
+        #[test]
+        fn it_to_vec() {
+            let a = Stack::from_vec(vec![1, 2, 3, 4, 5]);
+            assert_eq!(a.to_vec(), vec![1, 2, 3, 4, 5]);
+
+            let mut b = Stack::from_vec(vec![1, 2, 3]);
+            b.push(4);
+            b.push(5);
+            assert_eq!(a.to_vec(), vec![1, 2, 3, 4, 5]);
+
+
+            let mut c = Stack::new();
+            c.push(1);
+            c.push(2);
+            c.push(3);
+            assert_eq!(c.to_vec(), vec![3, 2, 1]);
         }
     }
 }
