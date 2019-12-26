@@ -1,32 +1,25 @@
+use super::{ Link, Node };
 use std::fmt;
-
-type Link = Option<Box<Node>>;
-
-#[derive(Debug)]
-struct Node {
-    value: i32,
-    next: Link,
-}
-
-#[allow(dead_code)]
-impl Node {
-    fn new(value: i32, next: Link) -> Self {
-        Node { value, next }
-    }
-}
+use std::{
+    fmt::Display, 
+    clone::Clone,
+    marker::Copy,
+};
 
 #[derive(Debug)]
-pub struct Stack {
-    head: Link,
+pub struct Stack<T> {
+    head: Link<T>,
     len: usize,
 }
 
-impl Stack {
+impl<T> Stack<T>
+where T: Display + Clone + Copy + ToString
+{
     pub fn new() -> Self {
         Stack { head: None, len: 0 }
     }
 
-    pub fn from_vec(mut v: Vec<i32>) -> Self {
+    pub fn from_vec(mut v: Vec<T>) -> Self {
         let mut s = Stack::new();
 
         while let Some(elem) = v.pop() {
@@ -38,8 +31,10 @@ impl Stack {
 }
 
 #[allow(dead_code)]
-impl Stack {
-    pub fn push(&mut self, value: i32) -> &mut Self {
+impl<T> Stack<T>
+where T: Display + Clone + Copy
+{
+    pub fn push(&mut self, value: T) -> &mut Self {
         let new_node = Box::new(Node {
             value,
             next: self.head.take(),
@@ -51,7 +46,7 @@ impl Stack {
         self
     }
 
-    pub fn pop(&mut self) -> Option<i32> {
+    pub fn pop(&mut self) -> Option<T> {
         if self.len != 0 {
             self.len -= 1;
         }
@@ -63,11 +58,11 @@ impl Stack {
         })
     }
 
-    pub fn peek(&self) -> Option<i32> {
+    pub fn peek(&self) -> Option<T> {
         self.head.as_ref().map(|node| node.value)
     }
 
-    pub fn peek_mut(&mut self) -> Option<&mut i32> {
+    pub fn peek_mut(&mut self) -> Option<&mut T> {
         self.head.as_mut().map(|node| &mut node.value)
     }
 
@@ -78,8 +73,8 @@ impl Stack {
         }
     }
 
-    pub fn to_vec(&self) -> Vec<i32> {
-        let mut vector: Vec<i32> = Vec::with_capacity(self.len);
+    pub fn to_vec(&self) -> Vec<T> {
+        let mut vector: Vec<T> = Vec::with_capacity(self.len);
         let mut current_node = &self.head;
 
         while let Some(node) = &current_node {
@@ -91,7 +86,7 @@ impl Stack {
     }
 
     pub fn reverse(&mut self) -> &mut Self {
-        let mut vector: Vec<i32> = Vec::with_capacity(self.len);
+        let mut vector: Vec<T> = Vec::with_capacity(self.len);
 
         while let Some(node_value) = self.pop() {
             vector.push(node_value);
@@ -123,7 +118,9 @@ impl Stack {
     }
 }
 
-impl fmt::Display for Stack {
+impl<T> Display for Stack<T>
+where T: ToString
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut fstr = String::default();
         let mut current_node = &self.head;
@@ -139,7 +136,7 @@ impl fmt::Display for Stack {
     }
 }
 
-impl Drop for Stack {
+impl<T> Drop for Stack<T> {
     fn drop(&mut self) {
         let mut current_link = self.head.take();
         while let Some(mut node) = current_link {
