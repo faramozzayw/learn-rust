@@ -1,8 +1,6 @@
 mod fzlib;
 
-pub use fzlib::Stack::{
-    Stack
-};
+use fzlib::Stack;
 
 fn main() {
   println!("Hello, world!");
@@ -31,7 +29,9 @@ fn main() {
 
   println!("Stack:\n{}", st);
 
-  let vst = Stack::from_vec(vec![1, 2, 3]);
+  let mut vst = Stack::from_vec(vec![1, 2, 3]);
+  vst.push(15);
   println!("vst:\n{}", vst);
+  println!("vst:\n{:?}", vst.to_vec());
   
 }
