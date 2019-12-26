@@ -39,7 +39,7 @@ impl Stack {
 
 #[allow(dead_code)]
 impl Stack {
-    pub fn push(&mut self, value: i32) {
+    pub fn push(&mut self, value: i32) -> &mut Self {
         let new_node = Box::new(Node {
             value,
             next: self.head.take(),
@@ -47,6 +47,8 @@ impl Stack {
 
         self.head = Some(new_node);
         self.len += 1;
+
+        self
     }
 
     pub fn pop(&mut self) -> Option<i32> {
@@ -88,7 +90,7 @@ impl Stack {
         vector
     }
 
-    pub fn reverse(&mut self) {
+    pub fn reverse(&mut self) -> &mut Self {
         let mut vector: Vec<i32> = Vec::with_capacity(self.len);
 
         while let Some(node_value) = self.pop() {
@@ -100,13 +102,15 @@ impl Stack {
         while let Some(elem) = vector.pop() {
             self.push(elem);
         }
+
+        self
     }
 
     pub fn len(&self) -> usize {
         self.len
     }
 
-    pub fn clear(&mut self) {
+    pub fn clear(&mut self) -> &mut Self {
         let mut current_node = self.head.take();
 
         while let Some(mut node) = current_node {
@@ -114,6 +118,8 @@ impl Stack {
         }
 
         self.len = 0;
+
+        self
     }
 }
 

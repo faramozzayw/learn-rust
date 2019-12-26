@@ -30,7 +30,10 @@ fn main() {
   println!("Stack:\n{}", st);
 
   let mut vst = Stack::from_vec(vec![1, 2, 3]);
-  vst.push(15);
+  vst
+    .push(15)
+    .push(4);
+
   println!("vst:\n{}", vst);
   println!("vst:\n{:?}", vst.to_vec());
   
