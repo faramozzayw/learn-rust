@@ -36,5 +36,4 @@ fn main() {
 
   println!("vst:\n{}", vst);
   println!("vst:\n{:?}", vst.to_vec());
-  
 }

@@ -145,6 +145,29 @@ impl<T> Drop for Stack<T> {
     }
 }
 
+impl<T> PartialEq for Stack<T>
+where T: Display + Clone + Copy + PartialEq
+{
+    fn eq(&self, other: &Self) -> bool {
+        let result: bool = if self.len() == other.len() {
+            let a = self.to_vec();
+            let b = other.to_vec();
+            
+            for (i, item) in a.iter().enumerate() {
+                if item != &b[i] {
+                    return false
+                } 
+            }
+
+            true
+        } else {
+            false
+        };
+
+        result
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -277,5 +300,37 @@ mod test {
         c.reverse();
         assert_eq!(c.len(), c_len);
         assert_eq!(c.to_vec(), vec![5, 4, 3, 0]);
+    }
+
+    #[test]
+    fn it_partial_eq() {
+        let s1 = Stack::from_vec(vec![1, 2, 3]);
+        let s2 = Stack::from_vec(vec![1, 2, 3]);
+
+        assert_eq!(s1 == s2 , true);
+
+        let s1 = Stack::from_vec(vec![1, 2, 3]);
+        let s2 = Stack::from_vec(vec![1, 2, 3, 4]);
+
+        assert_eq!(s1 == s2 , false);
+
+        let mut s1 = Stack::new();
+        s1.push("a");
+        s1.push("b");
+        s1.push("c");
+
+        let mut s2 = Stack::new();
+        s2.push("a");
+        s2.push("b");
+        s2.push("C");
+
+        assert_eq!(s1 == s2, false);
+
+        let s1 = Stack::from_vec(vec![true, false]);
+        let mut s2 = Stack::new();
+        s2.push(false);
+        s2.push(true);
+
+        assert_eq!(s1 == s2, true);
     }
 }
