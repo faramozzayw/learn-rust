@@ -1,4 +1,5 @@
 mod stack;
+mod tests;
 
 pub use stack::Stack;
 
