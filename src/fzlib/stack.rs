@@ -12,6 +12,7 @@ pub struct Stack<T> {
     len: usize,
 }
 
+#[allow(dead_code)]
 impl<T> Stack<T>
 where T: Display + Clone + Copy + ToString
 {
