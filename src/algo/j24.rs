@@ -4,6 +4,7 @@ impl Restrict for i32 {}
 impl Restrict for f32 {}
 impl Restrict for f64 {}
 
+#[allow(dead_code)]
 pub fn find_max<T>(arr: &Vec<T>) -> T
 where T: Restrict + PartialEq + PartialOrd + Clone
 {
