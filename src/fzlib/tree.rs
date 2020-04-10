@@ -47,6 +47,20 @@ where T: Display + Clone + Copy
 	}
 }
 
+impl<T> Default for Tree<T>
+where T: Default + Display + Clone + Copy
+{
+	fn default() -> Self {
+		let root: T = Default::default(); 
+		let root = Box::new(
+			Node::new(root, None, None)
+		);
+
+		let root = Some(root);
+		Tree { root }
+	}
+}
+
 #[allow(dead_code)]
 impl<T> Tree<T> 
 where T: Display + Clone + Copy

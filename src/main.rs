@@ -4,6 +4,6 @@ mod algo;
 use fzlib::Tree;
 
 fn main() {
-    let tree: Tree<i32> = Tree::new(1);
+let tree: Tree<i32> = Default::default();
     println!("{:#?}", tree);
 }
