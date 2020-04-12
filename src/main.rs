@@ -9,10 +9,16 @@ fn main() {
 
 	tree
 		.add(3)
-    	.add(-1)
-		.add(4)
-		.add(-5)
+    	//.add(-1)
+		//.add(4)
+		//.add(-5)
 		.add(1);
 
+	println!("{:#?}", tree);
+
+	//tree.delete(-1);
+	tree.delete(3);
+
     println!("{:#?}", tree);
+	
 }

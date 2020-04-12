@@ -65,6 +65,24 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 			&mut None => *node = Node::new_leaf(value),
 		}
 	}
+
+	fn delete(&mut self, value: T) {
+		let node = if value > self.value {
+			&mut self.left
+		} else {
+			&mut self.right
+		};
+
+		match node {
+			&mut Some(ref subnode) if subnode.value == value => {
+				*node = None;
+			},
+			&mut Some(ref mut subnode) if subnode.value != value => {
+				subnode.delete(value);
+			},
+			_ => (),
+		}
+	}
 }
 
 #[derive(Debug)]
@@ -113,5 +131,14 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 		}
 
 		self
+	}
+
+	// TODO: return enum Result!
+	pub fn delete(&mut self, value: T) {
+		if self.is_empty() {
+			panic!("Tree is empty!");
+		} else if let Some(node) = &mut self.root {
+			node.delete(value)
+		}
 	}
 }
