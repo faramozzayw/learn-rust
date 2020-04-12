@@ -7,20 +7,20 @@ use std::{
 	fmt::Debug
 };
 
-pub type Link<T> = Option<Box<Node<T>>>;
+type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug)]
-pub struct Node<T> {
-	pub value: T,
-	pub left: Link<T>,
-	pub right: Link<T>,
+struct Node<T> {
+	value: T,
+	left: Link<T>,
+	right: Link<T>,
 }
 
 #[allow(dead_code)]
 impl<T> Node<T>
 where T: Display + Clone + Copy
 {
-	fn new(value: T, left: Link<T>, right: Link<T>) -> Self {
+	pub fn new(value: T, left: Link<T>, right: Link<T>) -> Self {
 		Node {
 			value,
 			left,
@@ -41,8 +41,29 @@ where T: Display + Clone + Copy
 		node
 	}
 
-	fn new_leaf(value: T) -> Link<T> {
+	pub fn new_leaf(value: T) -> Link<T> {
 		Node::new_option(value, None, None)
+	}
+}
+
+impl<T> Node<T>
+where T: Debug + Display + Clone + Copy + PartialOrd
+{
+	fn insert(&mut self, value: T) {
+		if self.value == value {
+			panic!("The value '{}' is already exist in tree", value);
+		}
+
+		let node = if value > self.value {
+			&mut self.left
+		} else {
+			&mut self.right
+		};
+
+		match node {
+			&mut Some(ref mut subnode) => subnode.insert(value),
+			&mut None => *node = Node::new_leaf(value),
+		}
 	}
 }
 
@@ -63,7 +84,7 @@ where T: Display + Clone + Copy
 }
 
 impl<T> Default for Tree<T>
-where T: Default + Display + Clone + Copy + PartialOrd
+where T: Default + Display + Clone + Copy
 {
 	fn default() -> Self {
 		let root: T = Default::default(); 
@@ -84,29 +105,13 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 		}
 	}
 
+	// TODO: return enum Result!
 	pub fn add(&mut self, value: T) -> &mut Self {
-		match &self.root {
-			None => {
-				self.root = Node::new_leaf(value);
-			},
-			_ => self.add_to(value)
+		match &mut self.root {
+			Some(node) => node.insert(value),
+			None => self.root = Node::new_leaf(value)
 		}
 
 		self
-	}
-
-	#[allow(unused_mut, unused_variables)]
-	fn add_to(&mut self, value: T) {
-		let current = &mut self.root;
-
-		current.as_mut().map(|node| {
-			let leaf = Node::new_leaf(value);
-
-			if node.value < value {
-				node.left = leaf;
-			} else {
-				node.right = leaf;
-			}
-		});
 	}
 }
