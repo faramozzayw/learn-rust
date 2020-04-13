@@ -7,6 +7,8 @@ use std::{
 	fmt::Debug
 };
 
+use std::mem;
+
 type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug)]
@@ -49,6 +51,31 @@ where T: Display + Clone + Copy
 impl<T> Node<T>
 where T: Debug + Display + Clone + Copy + PartialOrd
 {
+	fn is_leaf(&self) -> bool {
+		match self.children_count() {
+			0 => true,
+			_ => false
+		}
+	}
+
+	fn children_count(&self) -> usize {
+		let mut count = 0;
+
+		if let Some(_) = &self.left {
+			count += 1;
+		}
+
+		if let Some(_) = &self.right {
+			count += 1;
+		}
+
+		count
+	}
+}
+
+impl<T> Node<T>
+where T: Debug + Display + Clone + Copy + PartialOrd
+{
 	fn insert(&mut self, value: T) {
 		if self.value == value {
 			panic!("The value '{}' is already exist in tree", value);
@@ -74,8 +101,25 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 		};
 
 		match node {
-			&mut Some(ref subnode) if subnode.value == value => {
+			&mut Some(ref subnode) if subnode.value == value && subnode.is_leaf() => {
 				*node = None;
+			},
+			&mut Some(ref mut subnode) if subnode.value == value && !subnode.is_leaf() => {
+				match subnode.children_count() {
+					1 => {
+						let swap_node = if let Some(left) = &subnode.left {
+							subnode.left.take()
+						} else {
+							subnode.right.take()
+						};
+
+						*node = swap_node;
+					},
+					2 => {
+
+					},
+					_ => panic!("Something wrong!")
+				}
 			},
 			&mut Some(ref mut subnode) if subnode.value != value => {
 				subnode.delete(value);
