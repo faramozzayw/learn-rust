@@ -7,8 +7,6 @@ use std::{
 	fmt::Debug
 };
 
-use std::mem;
-
 type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug)]
@@ -107,7 +105,7 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 			&mut Some(ref mut subnode) if subnode.value == value && !subnode.is_leaf() => {
 				match subnode.children_count() {
 					1 => {
-						let swap_node = if let Some(left) = &subnode.left {
+						let swap_node = if let Some(_) = &subnode.left {
 							subnode.left.take()
 						} else {
 							subnode.right.take()
