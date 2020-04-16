@@ -46,6 +46,7 @@ where T: Display + Clone + Copy
 	}
 }
 
+#[allow(dead_code)]
 impl<T> Node<T>
 where T: Debug + Display + Clone + Copy + PartialOrd
 {
@@ -69,6 +70,41 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 
 		count
 	}
+
+	fn min_node(&self) -> &Node<T> {
+		//let children  = ;
+
+		match (&self.left, &self.right) {
+			(Some(left), Some(right)) => {
+				if left.value < self.value {
+					return left.min_node();
+				} else if right.value > self.value {
+					return right.min_node();
+				} 
+			},
+			(_, Some(right)) => {
+				if right.value > self.value {
+					return right.min_node();
+				}
+			},
+			(Some(left), _) => {
+				if left.value > self.value {
+					return left.min_node();
+				}
+			},
+			_ => (),
+		};
+
+		&self
+	}
+
+	fn min_right(&self) -> &Node<T> {
+		if let Some(right) = &self.right {
+			right.min_node()
+		} else {
+			&self.min_node()
+		}
+	}
 }
 
 impl<T> Node<T>
@@ -79,7 +115,7 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 			panic!("The value '{}' is already exist in tree", value);
 		}
 
-		let node = if value > self.value {
+		let node = if value < self.value {
 			&mut self.left
 		} else {
 			&mut self.right
@@ -92,11 +128,15 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 	}
 
 	fn delete(&mut self, value: T) {
-		let node = if value > self.value {
+		if self.value == value {
+			return ();
+		}
+
+		let node = if value < self.value {
 			&mut self.left
 		} else {
 			&mut self.right
-		};
+		}; 
 
 		match node {
 			&mut Some(ref subnode) if subnode.value == value && subnode.is_leaf() => {
@@ -114,7 +154,10 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 						*node = swap_node;
 					},
 					2 => {
-
+						let min_right_value = subnode.min_right().value;
+						subnode.delete(min_right_value);
+						subnode.value = min_right_value;
+						
 					},
 					_ => panic!("Something wrong!")
 				}
