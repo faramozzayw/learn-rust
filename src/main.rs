@@ -5,22 +5,7 @@ use fzlib::Tree;
 
 
 fn main() {
-    //let mut tree: Tree<f32> = Default::default();
     let mut tree: Tree<i32> = Tree::new(5);
-
-	/*
-	tree
-		.add(3.0)
-    	//.add(-1)
-		.add(4.0)
-		//.add(-5)
-		.add(2.0)
-		.add(1.5)
-		.add(1.75)
-		.add(0.75)
-		.add(0.5)
-		.add(1.0);
-	*/
 
 	tree
 		.add(2)
@@ -34,11 +19,12 @@ fn main() {
 
 	println!("{:#?}", tree);
 
-	//tree.delete(-1);
 	tree.delete(12);
+
+	println!("{:#?}", tree);
 	//tree.delete(19);
 
-	//tree.delete(0);
+	tree.delete(5);
 
     println!("{:#?}", tree);
 	

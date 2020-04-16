@@ -1,5 +1,3 @@
-#[allow(unused_imports)]
-use std::fmt;
 use std::{
     fmt::Display, 
     clone::Clone,
@@ -7,10 +5,10 @@ use std::{
 	fmt::Debug
 };
 
-type Link<T> = Option<Box<Node<T>>>;
+use super::{ Link };
 
 #[derive(Debug)]
-struct Node<T> {
+pub(crate) struct Node<T> {
 	value: T,
 	left: Link<T>,
 	right: Link<T>,
@@ -50,14 +48,14 @@ where T: Display + Clone + Copy
 impl<T> Node<T>
 where T: Debug + Display + Clone + Copy + PartialOrd
 {
-	fn is_leaf(&self) -> bool {
+	pub(crate) fn is_leaf(&self) -> bool {
 		match self.children_count() {
 			0 => true,
 			_ => false
 		}
 	}
 
-	fn children_count(&self) -> usize {
+	pub(crate) fn children_count(&self) -> usize {
 		let mut count = 0;
 
 		if let Some(_) = &self.left {
@@ -72,8 +70,6 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 	}
 
 	fn min_node(&self) -> &Node<T> {
-		//let children  = ;
-
 		match (&self.left, &self.right) {
 			(Some(left), Some(right)) => {
 				if left.value < self.value {
@@ -110,7 +106,7 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 impl<T> Node<T>
 where T: Debug + Display + Clone + Copy + PartialOrd
 {
-	fn insert(&mut self, value: T) {
+	pub(crate) fn insert(&mut self, value: T) {
 		if self.value == value {
 			panic!("The value '{}' is already exist in tree", value);
 		}
@@ -127,7 +123,7 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 		}
 	}
 
-	fn delete(&mut self, value: T) {
+	pub(crate) fn delete(&mut self, value: T) {
 		if self.value == value {
 			return ();
 		}
@@ -145,19 +141,16 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 			&mut Some(ref mut subnode) if subnode.value == value && !subnode.is_leaf() => {
 				match subnode.children_count() {
 					1 => {
-						let swap_node = if let Some(_) = &subnode.left {
+						*node = if let Some(_) = &subnode.left {
 							subnode.left.take()
 						} else {
 							subnode.right.take()
 						};
-
-						*node = swap_node;
 					},
 					2 => {
 						let min_right_value = subnode.min_right().value;
 						subnode.delete(min_right_value);
 						subnode.value = min_right_value;
-						
 					},
 					_ => panic!("Something wrong!")
 				}
@@ -166,64 +159,6 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 				subnode.delete(value);
 			},
 			_ => (),
-		}
-	}
-}
-
-#[derive(Debug)]
-pub struct Tree<T> {
-	root: Link<T>
-}
-
-#[allow(dead_code)]
-impl<T> Tree<T> 
-where T: Display + Clone + Copy
-{
-	pub fn new(root: T) -> Self {
-		let root = Node::new_leaf(root);
-
-		Tree { root }
-	}
-}
-
-impl<T> Default for Tree<T>
-where T: Default + Display + Clone + Copy
-{
-	fn default() -> Self {
-		let root: T = Default::default(); 
-		let root = Node::new_leaf(root);
-		
-		Tree { root }
-	}
-}
-
-#[allow(dead_code)]
-impl<T> Tree<T> 
-where T: Debug + Display + Clone + Copy + PartialOrd
-{
-	pub fn is_empty(&self) -> bool {
-		match &self.root {
-			None => true,
-			_ => false,
-		}
-	}
-
-	// TODO: return enum Result!
-	pub fn add(&mut self, value: T) -> &mut Self {
-		match &mut self.root {
-			Some(node) => node.insert(value),
-			None => self.root = Node::new_leaf(value)
-		}
-
-		self
-	}
-
-	// TODO: return enum Result!
-	pub fn delete(&mut self, value: T) {
-		if self.is_empty() {
-			panic!("Tree is empty!");
-		} else if let Some(node) = &mut self.root {
-			node.delete(value)
 		}
 	}
 }
