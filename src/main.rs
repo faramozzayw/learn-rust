@@ -22,10 +22,4 @@ fn main() {
 	tree.delete(12);
 
 	println!("{:#?}", tree);
-	//tree.delete(19);
-
-	tree.delete(5);
-
-    println!("{:#?}", tree);
-	
 }

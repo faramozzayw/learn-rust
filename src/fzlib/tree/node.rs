@@ -9,9 +9,9 @@ use super::{ Link };
 
 #[derive(Debug)]
 pub(crate) struct Node<T> {
-	value: T,
-	left: Link<T>,
-	right: Link<T>,
+	pub(crate) value: T,
+	pub(crate) left: Link<T>,
+	pub(crate) right: Link<T>,
 }
 
 #[allow(dead_code)]
