@@ -131,7 +131,7 @@ mod node_test {
 				node.insert(61);
 				node.insert(-5);
 
-				assert_eq!(node.min_node(), -5);
+				assert_eq!(node.min_node().value, -5);
 			},
 			_ => (),
 		}
