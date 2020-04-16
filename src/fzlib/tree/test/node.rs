@@ -73,4 +73,50 @@ mod node_test {
 		let node = Node::new(1, Node::new_leaf(23), Node::new_leaf(2));
 		assert_eq!(node.is_leaf(), false);
 	}
+	#[test]
+	#[should_panic(expected = "assertion failed: `(left == right)`")]
+	fn it_is_leaf_panic() {
+		let node = Node::new_leaf(1);
+		assert_eq!(node.unwrap().is_leaf(), false);
+
+		let node = Node::new(1, None, Node::new_leaf(2));
+		assert!(node.is_leaf(), true);
+
+		let node = Node::new(1, Node::new_leaf(23), Node::new_leaf(2));
+		assert!(node.is_leaf(), true);
+	}
+
+
+	#[test]
+	fn it_insert() {
+		let mut node = Node::new_leaf(5);
+		match &mut node {
+			Some(node) => {
+				node.insert(1);
+				node.insert(6);
+				
+				assert_eq!(node.left.as_ref().unwrap().value, 1);
+				assert_eq!(node.right.as_ref().unwrap().value, 6);
+
+				node.insert(15);
+				match &mut node.right {
+					Some(node) => {
+						assert_eq!(node.right.as_ref().unwrap().value, 15);
+
+						node.insert(3);
+						assert_eq!(node.left.as_ref().unwrap().value, 3);
+					},
+					_ => (),
+				}
+			},
+			_ => (),
+		}
+	}
+
+	#[test]
+	#[should_panic(expected = "The value \'4\' is already exist in tree")]
+	fn it_insert_4_panic() {
+		let node = Node::new_leaf(4);
+		node.unwrap().insert(4);
+	}
 }
