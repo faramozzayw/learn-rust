@@ -69,7 +69,7 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 		count
 	}
 
-	fn min_node(&self) -> &Node<T> {
+	pub(crate) fn min_node(&self) -> &Node<T> {
 		match (&self.left, &self.right) {
 			(Some(left), Some(right)) => {
 				if left.value < self.value {
