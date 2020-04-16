@@ -119,4 +119,21 @@ mod node_test {
 		let node = Node::new_leaf(4);
 		node.unwrap().insert(4);
 	}
+
+	#[test]
+	fn it_min_node() {
+		let mut node = Node::new_leaf(4);
+		
+		match &mut node {
+			Some(node) => {
+				node.insert(1);
+				node.insert(6);
+				node.insert(61);
+				node.insert(-5);
+
+				assert_eq!(node.min_node(), -5);
+			},
+			_ => (),
+		}
+	}
 }
