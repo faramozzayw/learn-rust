@@ -60,10 +60,6 @@ where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 		if self.is_empty() {
 			panic!("Tree is empty!");
 		} else if let Some(node) = &mut self.root {
-				if node.value == value {
-					println!("root");
-				}
-
 			node.delete(value)
 		}
 	}

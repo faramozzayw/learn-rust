@@ -154,4 +154,50 @@ mod node_test {
 			_ => (),
 		}
 	}
+
+	#[test]
+	fn it_delete() {
+		let mut node = Node::new_leaf(5);
+
+		match &mut node {
+			Some(node) => {
+				node.insert(1);
+				node.insert(32);
+
+				node.delete(1);
+
+				assert_eq!(node.value, 5);
+				
+				match &mut node.right {
+					Some(node) => assert_eq!(node.value, 32),
+					_ => (),
+				}
+			},
+			_ => (),
+		}
+
+		let mut node = Node::new_leaf(25);
+
+		match &mut node {
+			Some(node) => {
+				node.insert(5);
+				node.insert(1);
+
+				node.delete(5);
+
+				match &mut node.left {
+					Some(node) => assert_eq!(node.value, 1),
+					_ => (),
+				}
+
+				node.delete(1);
+
+				match &mut node.left {
+					None => assert!(true),
+					Some(_) => assert!(false),
+				}
+			},
+			_ => (),
+		}
+	}
 }
