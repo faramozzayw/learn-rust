@@ -14,7 +14,7 @@ pub struct Tree<T> {
 
 #[allow(dead_code)]
 impl<T> Tree<T> 
-where T: Display + Clone + Copy
+where T: Debug + Display  + Clone + Copy + Default
 {
 	pub fn new(root: T) -> Self {
 		let root = Node::new_leaf(root);
@@ -24,7 +24,7 @@ where T: Display + Clone + Copy
 }
 
 impl<T> Default for Tree<T>
-where T: Default + Display + Clone + Copy
+where T: Default + Debug + Display  + Clone + Copy
 {
 	fn default() -> Self {
 		let root: T = Default::default(); 
@@ -36,7 +36,7 @@ where T: Default + Display + Clone + Copy
 
 #[allow(dead_code)]
 impl<T> Tree<T> 
-where T: Debug + Display + Clone + Copy + PartialOrd
+where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 {
 	pub fn is_empty(&self) -> bool {
 		match &self.root {
@@ -60,6 +60,10 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 		if self.is_empty() {
 			panic!("Tree is empty!");
 		} else if let Some(node) = &mut self.root {
+				if node.value == value {
+					println!("root");
+				}
+
 			node.delete(value)
 		}
 	}

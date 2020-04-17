@@ -74,7 +74,7 @@ mod node_test {
 		assert_eq!(node.is_leaf(), false);
 	}
 	#[test]
-	#[should_panic(expected = "assertion failed: `(left == right)`")]
+	#[should_panic]
 	fn it_is_leaf_panic() {
 		let node = Node::new_leaf(1);
 		assert_eq!(node.unwrap().is_leaf(), false);
@@ -130,6 +130,24 @@ mod node_test {
 				node.insert(6);
 				node.insert(61);
 				node.insert(-5);
+
+				println!("{:#?}", &node);
+
+				assert_eq!(node.min_node().value, -5);
+			},
+			_ => (),
+		}
+
+		let mut node = Node::new_leaf(-5);
+		
+		match &mut node {
+			Some(node) => {
+				node.insert(1);
+				node.insert(32);
+				node.insert(-1);
+				node.insert(-4);
+
+				println!("{:#?}", &node);
 
 				assert_eq!(node.min_node().value, -5);
 			},

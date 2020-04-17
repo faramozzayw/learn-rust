@@ -1,0 +1,5 @@
+[alias]
+r = "run"
+rr = "run --release"
+t = "test"
+pt = "test -- --nocapture"
