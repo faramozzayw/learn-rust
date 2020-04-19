@@ -1,36 +1,44 @@
 use std::{
-    fmt::Display, 
-    clone::Clone,
+	fmt::Display, 
+	clone::Clone,
 	marker::Copy,
-	fmt::Debug
+	fmt::Debug,
+	cmp::{
+		Ordering,
+		Ord
+	},
 };
 
-use super::{ Link };
+use super::{ Link, TreeNodeMark };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(crate) struct Node<T> {
 	pub(crate) value: T,
 	pub(crate) left: Link<T>,
 	pub(crate) right: Link<T>,
 }
 
+impl<T> TreeNodeMark for Node<T>
+where T: 'static + Clone + Debug
+{}
+
 #[allow(dead_code)]
 impl<T> Node<T>
-where T: Display + Clone + Copy
+where T: Display + Debug + Clone + Copy + Default
 {
 	pub fn new(value: T, left: Link<T>, right: Link<T>) -> Self {
 		Node {
 			value,
 			left,
-			right
+			right,
 		}
 	}
 
-	fn new_option(value: T, left: Link<T>, right: Link<T>) -> Link<T> {
+	fn new_link(value: T, left: Link<T>, right: Link<T>) -> Link<T> {
 		let node = Node {
 			value,
 			left,
-			right
+			right,
 		};
 
 		let node = Box::new(node);
@@ -40,7 +48,19 @@ where T: Display + Clone + Copy
 	}
 
 	pub fn new_leaf(value: T) -> Link<T> {
-		Node::new_option(value, None, None)
+		Node::new_link(value, None, None)
+	}
+
+	pub(crate) fn copy(&self) -> Self {
+		let value: T = self.value;
+
+		let node = Node {
+			value,
+			left: None,
+			right: None,
+		};
+
+		node
 	}
 }
 
@@ -69,29 +89,14 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 		count
 	}
 
-	fn min_node(&self) -> &Node<T> {
-		match (&self.left, &self.right) {
-			(Some(left), Some(right)) => {
-				if left.value < self.value {
-					return left.min_node();
-				} else if right.value > self.value {
-					return right.min_node();
-				} 
-			},
-			(_, Some(right)) => {
-				if right.value > self.value {
-					return right.min_node();
-				}
-			},
-			(Some(left), _) => {
-				if left.value > self.value {
-					return left.min_node();
-				}
-			},
-			_ => (),
-		};
+	pub(crate) fn min_node(&self) -> &Node<T> {
+		let mut current_node = &*self;
 
-		&self
+		while let Some(node) = &current_node.left {
+			current_node = &node;
+		}
+
+		current_node
 	}
 
 	fn min_right(&self) -> &Node<T> {
@@ -104,7 +109,7 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 }
 
 impl<T> Node<T>
-where T: Debug + Display + Clone + Copy + PartialOrd
+where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 {
 	pub(crate) fn insert(&mut self, value: T) {
 		if self.value == value {
@@ -124,15 +129,17 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 	}
 
 	pub(crate) fn delete(&mut self, value: T) {
-		if self.value == value {
-			return ();
-		}
+		let mut tmp_self = Some(Box::new(self.clone()));
+		let mut is_root = false;
 
-		let node = if value < self.value {
-			&mut self.left
-		} else {
-			&mut self.right
-		}; 
+		let node = match self.value.cmp(&value) {
+			Ordering::Greater => &mut self.left,
+			Ordering::Less => &mut self.right,
+			Ordering::Equal => {
+				is_root = true;
+				&mut tmp_self
+			},
+		};
 
 		match node {
 			&mut Some(ref subnode) if subnode.value == value && subnode.is_leaf() => {
@@ -159,6 +166,12 @@ where T: Debug + Display + Clone + Copy + PartialOrd
 				subnode.delete(value);
 			},
 			_ => (),
+		}
+
+		if is_root {
+			if let Some(ref new_self) = &mut tmp_self {
+				*self = Node::new(new_self.value, new_self.left.clone(), new_self.right.clone())
+			}
 		}
 	}
 }
