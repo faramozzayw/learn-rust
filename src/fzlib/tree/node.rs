@@ -19,7 +19,7 @@ pub(crate) struct Node<T> {
 }
 
 impl<T> TreeNodeMark for Node<T>
-where T: 'static + Clone
+where T: 'static + Clone + Debug
 {}
 
 #[allow(dead_code)]
@@ -34,7 +34,7 @@ where T: Display + Debug + Clone + Copy + Default
 		}
 	}
 
-	fn new_option(value: T, left: Link<T>, right: Link<T>) -> Link<T> {
+	fn new_link(value: T, left: Link<T>, right: Link<T>) -> Link<T> {
 		let node = Node {
 			value,
 			left,
@@ -48,7 +48,7 @@ where T: Display + Debug + Clone + Copy + Default
 	}
 
 	pub fn new_leaf(value: T) -> Link<T> {
-		Node::new_option(value, None, None)
+		Node::new_link(value, None, None)
 	}
 
 	pub(crate) fn copy(&self) -> Self {
@@ -59,8 +59,6 @@ where T: Display + Debug + Clone + Copy + Default
 			left: None,
 			right: None,
 		};
-
-		println!("{:#?}", &node);
 
 		node
 	}
@@ -131,12 +129,16 @@ where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 	}
 
 	pub(crate) fn delete(&mut self, value: T) {
-		let mut tmp_self = &mut Some(Box::new(self.clone()));
+		let mut tmp_self = Some(Box::new(self.clone()));
+		let mut is_root = false;
 
 		let node = match self.value.cmp(&value) {
 			Ordering::Greater => &mut self.left,
 			Ordering::Less => &mut self.right,
-			Ordering::Equal => &mut tmp_self,
+			Ordering::Equal => {
+				is_root = true;
+				&mut tmp_self
+			},
 		};
 
 		match node {
@@ -164,6 +166,12 @@ where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 				subnode.delete(value);
 			},
 			_ => (),
+		}
+
+		if is_root {
+			if let Some(ref new_self) = &mut tmp_self {
+				*self = Node::new(new_self.value, new_self.left.clone(), new_self.right.clone())
+			}
 		}
 	}
 }

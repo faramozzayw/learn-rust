@@ -131,8 +131,6 @@ mod node_test {
 				node.insert(61);
 				node.insert(-5);
 
-				println!("{:#?}", &node);
-
 				assert_eq!(node.min_node().value, -5);
 			},
 			_ => (),
@@ -146,8 +144,6 @@ mod node_test {
 				node.insert(32);
 				node.insert(-1);
 				node.insert(-4);
-
-				println!("{:#?}", &node);
 
 				assert_eq!(node.min_node().value, -5);
 			},
@@ -173,7 +169,7 @@ mod node_test {
 					_ => (),
 				}
 			},
-			_ => (),
+			_ => panic!("Something bad wrong..."),
 		}
 
 		let mut node = Node::new_leaf(25);
@@ -197,7 +193,38 @@ mod node_test {
 					Some(_) => assert!(false),
 				}
 			},
-			_ => (),
+			_ => panic!("Something bad wrong..."),
+		}
+	}
+
+	#[test]
+	fn it_delete_root_isnt_leaf() {
+		
+		let mut node = Node::new_leaf(3);
+		match &mut node {
+			Some(node) => {
+				node.insert(2);
+				node.insert(4);
+				node.delete(3);
+				
+				assert_eq!(node.value, 4);
+
+				match &mut node.left {
+					Some(ref mut subnode) => {
+						assert_eq!(subnode.value, 2);
+					},
+					None => assert!(false),
+				}
+
+				assert_eq!(node.value, 4);
+				assert!(!node.is_leaf());
+
+				node.delete(2);
+				assert!(node.is_leaf());
+
+				node.delete(4);
+			},
+			_ => panic!("Something bad wrong..."),
 		}
 	}
 }
