@@ -2,14 +2,14 @@ use std::{
     fmt::Display, 
     clone::Clone,
 	marker::Copy,
-	fmt::Debug
+	fmt::Debug,
 };
 
 use super::{ Link, Node };
 
 #[derive(Debug)]
 pub struct Tree<T> {
-	root: Link<T>
+	pub(crate) root: Link<T>
 }
 
 #[allow(dead_code)]
@@ -39,10 +39,7 @@ impl<T> Tree<T>
 where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 {
 	pub fn is_empty(&self) -> bool {
-		match &self.root {
-			None => true,
-			_ => false,
-		}
+		self.root.is_none()
 	}
 
 	// TODO: return enum Result!
@@ -59,8 +56,12 @@ where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 	pub fn delete(&mut self, value: T) {
 		if self.is_empty() {
 			panic!("Tree is empty!");
-		} else if let Some(node) = &mut self.root {
-			node.delete(value)
+		} else if let Some(ref mut node) = &mut self.root {
+			if node.value == value && node.is_leaf() {
+				self.root = None
+			} else {
+				node.delete(value)
+			}
 		}
 	}
 }

@@ -112,14 +112,10 @@ impl<T> Node<T>
 where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 {
 	pub(crate) fn insert(&mut self, value: T) {
-		if self.value == value {
-			panic!("The value '{}' is already exist in tree", value);
-		}
-
-		let node = if value < self.value {
-			&mut self.left
-		} else {
-			&mut self.right
+		let node = match self.value.cmp(&value) {
+			Ordering::Greater => &mut self.left,
+			Ordering::Less => &mut self.right,
+			Ordering::Equal => panic!("The value '{}' is already exist in tree", value),
 		};
 
 		match node {
