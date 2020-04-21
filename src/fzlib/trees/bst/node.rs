@@ -9,7 +9,8 @@ use std::{
 	},
 };
 
-use super::{ Link, TreeNodeMark };
+use super::{ Link };
+use crate::fzlib::trees::TreeNodeMark;
 
 #[derive(Debug, Clone)]
 pub(crate) struct Node<T> {
@@ -49,18 +50,6 @@ where T: Display + Debug + Clone + Copy + Default
 
 	pub fn new_leaf(value: T) -> Link<T> {
 		Node::new_link(value, None, None)
-	}
-
-	pub(crate) fn copy(&self) -> Self {
-		let value: T = self.value;
-
-		let node = Node {
-			value,
-			left: None,
-			right: None,
-		};
-
-		node
 	}
 }
 
