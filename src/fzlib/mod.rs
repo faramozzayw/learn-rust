@@ -1,9 +1,9 @@
 mod stack;
-mod tree;
+mod trees;
 //mod tests;
 
 pub use stack::Stack;
-pub use tree::Tree;
+pub use trees::Tree;
 
 pub type Link<T> = Option<Box<Node<T>>>;
 
