@@ -1,6 +1,11 @@
+#[allow(unused_imports)]
+use super::{
+	Stack
+};
+
 #[cfg(test)]
 mod test {
-    use crate::Stack;
+    use super::Stack;
 
     #[test]
     fn it_basic_operation() {
