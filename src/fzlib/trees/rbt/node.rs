@@ -10,15 +10,8 @@ use std::{
 	},
 };
 
-use super::{ Link };
+use super::{ Link, Color };
 use crate::fzlib::trees::TreeNodeMark;
-
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
-pub(crate) enum Color {
-	Red,
-	Black,
-}
 
 #[derive(Debug, Clone)]
 pub(crate) struct Node<T> {
@@ -43,5 +36,16 @@ where T: Display + Debug + Clone + Copy + Default
 			right,
 			color,
 		}
+	}
+}
+
+#[allow(dead_code, unused_variables)]
+impl<T> Node<T> {
+	pub(crate) fn insert(&mut self, value: T) {
+		unimplemented!();
+	}
+
+	pub(crate) fn delete(&mut self, value: T) {
+		unimplemented!();
 	}
 }
