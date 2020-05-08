@@ -6,3 +6,5 @@ pub use trees::{
     Tree,
     RBT,
 };
+
+pub mod prelude;

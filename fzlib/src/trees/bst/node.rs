@@ -10,7 +10,7 @@ use std::{
 };
 
 use super::{ Link };
-use crate::fzlib::trees::TreeNodeMark;
+use crate::trees::TreeNodeMark;
 
 #[derive(Debug, Clone)]
 pub(crate) struct Node<T> {
