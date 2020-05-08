@@ -3,3 +3,6 @@ r = "run"
 rr = "run --release"
 t = "test"
 pt = "test -- --nocapture"
+
+# run test for all lib
+at = "test --lib --all"

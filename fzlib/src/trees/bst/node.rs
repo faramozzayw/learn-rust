@@ -127,11 +127,9 @@ where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 		};
 
 		match node {
-			&mut Some(ref subnode) if subnode.value == value && subnode.is_leaf() => {
-				*node = None;
-			},
-			&mut Some(ref mut subnode) if subnode.value == value && !subnode.is_leaf() => {
+			&mut Some(ref mut subnode) if subnode.value == value => {
 				match subnode.children_count() {
+					0 => *node = None,
 					1 => {
 						*node = if let Some(_) = &subnode.left {
 							subnode.left.take()

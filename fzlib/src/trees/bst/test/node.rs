@@ -198,6 +198,24 @@ mod node_test {
 	}
 
 	#[test]
+	fn it_delete_nothing() {
+		let mut node = Node::new_leaf(5);
+		
+		match &mut node {
+			Some(node) => {
+				for key in -4..=4 {
+					node.delete(key);
+				}
+
+				for key in 6..=10 {
+					node.delete(key);
+				}
+			},
+			_ => (),
+		}
+	}
+
+	#[test]
 	fn it_delete_root_isnt_leaf() {
 		
 		let mut node = Node::new_leaf(3);
