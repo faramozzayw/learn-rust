@@ -18,6 +18,12 @@ pub struct RBT<T> {
     root: Link<T>
 }
 
+pub trait Tree<T> {
+	fn add(&mut self, _: T) -> Result<&mut Self, ()>;
+	fn delete(&mut self, _: T) -> Result<&mut Self, ()>;
+	fn is_empty(&self) -> bool;
+}
+
 #[allow(dead_code)]
 impl<T> RBT<T> 
 where T: Display + Debug + Clone + Copy + Default
@@ -29,4 +35,42 @@ where T: Display + Debug + Clone + Copy + Default
 
         Self { root }
     }
+}
+
+impl<T> Default for RBT<T>
+where T: Default + Debug + Display  + Clone + Copy
+{
+	fn default() -> Self {
+		let root: T = Default::default(); 
+		let root = Node::new_link(root, None, None, Color::Black);
+		
+		RBT { root }
+	}
+}
+
+impl<T> Tree<T> for RBT<T>
+where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
+{
+	fn is_empty(&self) -> bool {
+		self.root.is_none()
+	}
+
+	fn add(&mut self, value: T) -> Result<&mut Self, ()> {
+		#[allow(unused_must_use)]
+		match &mut self.root {
+			// TODO: refactoring
+			Some(node) => {
+				node.insert(value);
+				()
+			},
+			None => self.root = Node::new_link(value, None, None, Color::Black),
+		}
+
+		Ok(self)
+	}
+
+	fn delete(&mut self, value: T) -> Result<&mut Self, ()> {
+		unimplemented!();
+	}
+
 }
