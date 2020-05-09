@@ -3,7 +3,7 @@ mod test {
 	use crate::selection_sort;
 
 	#[test]
-	fn sort_i32() {
+	fn it_sort_i32() {
 		let ascending = |a, b| -> bool { a < b };
 
 		// Sort empty vector
@@ -37,7 +37,7 @@ mod test {
 	}
 
 	#[test]
-	fn sort_f32() {
+	fn it_sort_f32() {
 		let ascending = |a, b| -> bool { a < b };
 
 		// Sort empty vector
@@ -61,7 +61,7 @@ mod test {
 	}
 
 	#[test]
-	fn sort_bool_why_not() {
+	fn it_sort_bool_why_not() {
 		let ascending = |a, b| -> bool { a < b };
 
 		let mut v = vec![true, false, false, true];
@@ -77,7 +77,7 @@ mod test {
 
 	#[test]
 	#[should_panic]
-	fn panic_sort_i32() {
+	fn it_panic_sort_i32() {
 		let ascending = |a, b| -> bool { a < b };
 
 		let mut v = vec![1, 1, 2, 3, 4];
@@ -92,7 +92,7 @@ mod test {
 
 	#[test]
 	#[should_panic]
-	fn panic_sort_f32() {
+	fn it_panic_sort_f32() {
 		let ascending = |a, b| -> bool { a < b };
 
 		let mut v = vec![0.234, -2.34, 2.57, 97.124, 40.25];
