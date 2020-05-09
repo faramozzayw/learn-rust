@@ -48,6 +48,8 @@ where T: Default + Debug + Display  + Clone + Copy
 	}
 }
 
+
+#[allow(unused_variables, unused_must_use)]
 impl<T> Tree<T> for RBT<T>
 where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 {
@@ -56,7 +58,6 @@ where T: Debug + Display + Clone + Copy + PartialOrd + Ord + Default
 	}
 
 	fn add(&mut self, value: T) -> Result<&mut Self, ()> {
-		#[allow(unused_must_use)]
 		match &mut self.root {
 			// TODO: refactoring
 			Some(node) => {

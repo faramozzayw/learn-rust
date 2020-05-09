@@ -1,0 +1,74 @@
+#[cfg(test)]
+mod test {
+	use crate::selection_sort;
+
+	#[test]
+	fn sort_i32() {
+		// Sort empty vector
+		let mut v: Vec<i32> = vec![];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![]);
+
+		let mut v = vec![0, 1, 2, 3, 4];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![0, 1, 2, 3, 4]);
+
+		let mut v = vec![0, 1, 2, 3, 4];
+		v.reverse();
+		selection_sort(&mut v);
+		assert_eq!(v, vec![0, 1, 2, 3, 4]);
+
+		let mut v = vec![5, -1, -22, 345, 4];
+		v.reverse();
+		selection_sort(&mut v);
+		assert_eq!(v, vec![-22, -1, 4, 5, 345]);
+
+		let mut v = vec![5, -1, -22, 345, 4];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![-22, -1, 4, 5, 345]);
+	}
+
+	#[test]
+	fn sort_f32() {
+		// Sort empty vector
+		let mut v: Vec<f32> = vec![];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![]);
+
+		let mut v: Vec<f32> = vec![0.0];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![0.0]);
+
+		let mut v = vec![0.234, -2.34, 2.57, 97.124, 40.25];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![-2.34, 0.234, 2.57, 40.25, 97.124]);
+	}
+
+	#[test]
+	fn sort_bool_why_not() {
+		let mut v = vec![true, false, false, true];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![false, false, true, true]);
+	}
+
+	#[test]
+	#[should_panic]
+	fn panic_sort_i32() {
+		let mut v = vec![1, 1, 2, 3, 4];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![0, 1, 2, 3, 4]);
+
+
+		let mut v = vec![0, -1, 1];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![-1, 1]);
+	}
+
+	#[test]
+	#[should_panic]
+	fn panic_sort_f32() {
+		let mut v = vec![0.234, -2.34, 2.57, 97.124, 40.25];
+		selection_sort(&mut v);
+		assert_eq!(v, vec![0.234, -2.34, 2.57, 97.124, 40.25]);
+	}
+}
