@@ -3,7 +3,7 @@ use std::{
 	marker::Copy,
 };
 
-pub fn selection_sort<T, F>(vector: &mut Vec<T>, compare_fn: F)
+pub fn selection_sort<T, F>(vector: &mut Vec<T>, compare: F)
 where 
 T: PartialEq + PartialOrd + Clone + Copy,
 F: Fn(T, T) -> bool
@@ -15,7 +15,7 @@ F: Fn(T, T) -> bool
 		
 		let mut j: usize = i + 1;
 		while j < vector.len() {
-			if compare_fn(vector[j], vector[min]) {
+			if compare(vector[j], vector[min]) {
 				min = j;
 			}
 
