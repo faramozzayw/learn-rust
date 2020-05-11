@@ -3,6 +3,7 @@ use std::{
 	marker::Copy,
 };
 
+#[allow(dead_code)]
 pub fn shell_sort<T, F>(vector: &mut Vec<T>, compare: F)
 where 
 T: PartialEq + PartialOrd + Clone + Copy,

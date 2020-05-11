@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 fzlib = { version = "0.1.0", path = "fzlib" }
+reduce = "0.1.2"
 
 [workspace]
 members = [
